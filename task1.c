@@ -4,9 +4,8 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/types.h> 
-#include <sys/stat.h>
-#include <sys/wait.h> 
-
+#include <sys/stat.h> 
+#include <sys/wait.h>
 
 int 
 main(int argc, char **argv)
@@ -24,8 +23,15 @@ main(int argc, char **argv)
         read(fd2[0], buf, 1);
         write(fd2[1], "0", 1);
         return 1;
+    } 
+    int status;
+    wait(&status);
+    if (WIFEXITED(status) != 0){
+        write(1, "No", 2);
+        close(fd2[0]);
+        close(fd2[1]);
+        return 1;
     }
-    wait(0);
     //now we want to check if there are problems
     char buf[1];
     read(fd2[0], buf, 1);
